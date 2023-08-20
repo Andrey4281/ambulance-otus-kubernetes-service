@@ -25,12 +25,12 @@ maven-build:
 docker-build:
   stage: docker
   script:
-    - cd /appeal-service
+    - cd ./appeal-service
     - pwd
     - ls -l
-    - cd /doctor-service
+    - cd ./doctor-service
     - pwd
     - ls -l
-    - cd /nurse-service
+    - cd ./nurse-service
     - pwd
     - ls -l
