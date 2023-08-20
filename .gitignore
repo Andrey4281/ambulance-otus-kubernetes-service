@@ -1,0 +1,7 @@
+/.idea/
+/ambulance-core/target/
+/appeal-service/target/
+/doctor-service/target/
+/nurse-service/.mvn/
+/gateway-service/.mvn/
+/appeal-service/target/
