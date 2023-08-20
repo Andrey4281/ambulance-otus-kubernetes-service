@@ -1,0 +1,17 @@
+spring:
+  r2dbc:
+    url: r2dbc:postgresql://${RDS_HOSTNAME:localhost}:${RDS_PORT:5436}/${RDS_DB_NAME:nurse}
+    username: ${RDS_USERNAME:nurse}
+    password: ${RDS_PASSWORD:nurse}
+    initialization-mode: always
+    pool:
+      name: NURSE-SERVICE-POOL
+      maxSize: 10
+      initialSize: 2
+      maxIdleTime: 30m
+      validationQuery: "SELECT 1"
+  liquibase:
+    url: jdbc:postgresql://${RDS_HOSTNAME:localhost}:${RDS_PORT:5436}/${RDS_DB_NAME:nurse}
+    user: ${RDS_USERNAME:nurse}
+    password: ${RDS_USERNAME:nurse}
+    change-log: classpath:/db/db.changelog.yaml
