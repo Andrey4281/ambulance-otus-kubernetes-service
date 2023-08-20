@@ -28,9 +28,11 @@ docker-build:
     - cd ./appeal-service
     - pwd
     - ls -l
+    - cd ../
     - cd ./doctor-service
     - pwd
     - ls -l
+    - cd ../
     - cd ./nurse-service
     - pwd
     - ls -l
