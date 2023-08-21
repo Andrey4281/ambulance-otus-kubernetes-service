@@ -9,9 +9,6 @@ variables:
   REPO: ambulance-service
   DOCKER_TLS_CERTDIR: ""
 
-before_script:
-  - docker info
-
 stages:
   - build
   - docker
@@ -19,6 +16,8 @@ stages:
 maven-build:
   image: maven:3-openjdk-17
   stage: build
+  before_script:
+    - docker info
   script: "mvn clean package -B"
   artifacts:
     paths:
@@ -28,6 +27,8 @@ maven-build:
 
 docker-build:
   stage: docker
+  before_script:
+    - docker info
   script:
     - docker login -u ${YC_CI_REGISTRY_USER} -p ${YC_CI_REGISTRY_PASSWORD} ${YC_CI_REGISTRY}
     - cd ./appeal-service
