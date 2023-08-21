@@ -25,14 +25,15 @@ maven-build:
 docker-build:
   stage: docker
   script:
+    - docker login -u ${YC_CI_REGISTRY_USER} -p ${YC_CI_REGISTRY_PASSWORD} ${YC_CI_REGISTRY}
     - cd ./appeal-service
-    - pwd
-    - ls -l
+    - docker build -t ${YC_CI_REGISTRY}/${YC_CI_REGISTRY_ID}/andrey4281/appeal-service:${CI_COMMIT_SHA} .
+    - docker push ${YC_CI_REGISTRY}/${YC_CI_REGISTRY_ID}/andrey4281/appeal-service:${CI_COMMIT_SHA}
     - cd ../
     - cd ./doctor-service
-    - pwd
-    - ls -l
+    - docker build -t ${YC_CI_REGISTRY}/${YC_CI_REGISTRY_ID}/andrey4281/doctor-service:${CI_COMMIT_SHA} .
+    - docker push ${YC_CI_REGISTRY}/${YC_CI_REGISTRY_ID}/andrey4281/doctor-service:${CI_COMMIT_SHA}
     - cd ../
     - cd ./nurse-service
-    - pwd
-    - ls -l
+    - docker build -t ${YC_CI_REGISTRY}/${YC_CI_REGISTRY_ID}/andrey4281/nurse-service:${CI_COMMIT_SHA} .
+    - docker push ${YC_CI_REGISTRY}/${YC_CI_REGISTRY_ID}/andrey4281/nurse-service:${CI_COMMIT_SHA}
