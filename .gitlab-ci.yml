@@ -26,6 +26,7 @@ maven-build:
       - nurse-service/target/*.jar
 
 docker-build:
+  image: docker:19.03.0
   stage: docker
   before_script:
     - docker info
