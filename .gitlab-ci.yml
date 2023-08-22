@@ -1,14 +1,3 @@
-image: docker:19.03.0
-services:
-  - docker:19.03.0-dind
-
-variables:
-  DOCKER_DRIVER: overlay2
-  USER_GITLAB: andrey4281
-  APP_NAME: ambulance-service
-  REPO: ambulance-service
-  DOCKER_TLS_CERTDIR: ""
-
 stages:
   - build
   - docker
@@ -23,21 +12,25 @@ maven-build:
       - doctor-service/target/*.jar
       - nurse-service/target/*.jar
 
-docker-build:
-  image: docker:19.03.0
+build:
   stage: docker
-  before_script:
-    - docker info
+  image:
+    name: gcr.io/kaniko-project/executor:v1.9.0-debug
+    entrypoint: [""]
+  only:
+    - main
   script:
-    - docker login -u ${YC_CI_REGISTRY_USER} -p ${YC_CI_REGISTRY_PASSWORD} ${YC_CI_REGISTRY}
-    - cd ./appeal-service
-    - docker build -t ${YC_CI_REGISTRY}/${YC_CI_REGISTRY_ID}/andrey4281/appeal-service:${CI_COMMIT_SHA} .
-    - docker push ${YC_CI_REGISTRY}/${YC_CI_REGISTRY_ID}/andrey4281/appeal-service:${CI_COMMIT_SHA}
-    - cd ../
-    - cd ./doctor-service
-    - docker build -t ${YC_CI_REGISTRY}/${YC_CI_REGISTRY_ID}/andrey4281/doctor-service:${CI_COMMIT_SHA} .
-    - docker push ${YC_CI_REGISTRY}/${YC_CI_REGISTRY_ID}/andrey4281/doctor-service:${CI_COMMIT_SHA}
-    - cd ../
-    - cd ./nurse-service
-    - docker build -t ${YC_CI_REGISTRY}/${YC_CI_REGISTRY_ID}/andrey4281/nurse-service:${CI_COMMIT_SHA} .
-    - docker push ${YC_CI_REGISTRY}/${YC_CI_REGISTRY_ID}/andrey4281/nurse-service:${CI_COMMIT_SHA}
+    - mkdir -p /kaniko/.docker
+    - echo "{\"auths\":{\"${YC_CI_REGISTRY}\":{\"auth\":\"$(printf "%s:%s" "${YC_CI_REGISTRY_USER}" "${YC_CI_REGISTRY_PASSWORD}" | base64 | tr -d '\n')\"}}}" > /kaniko/.docker/config.json
+    - /kaniko/executor
+      --context "${CI_PROJECT_DIR}"
+      --dockerfile "${CI_PROJECT_DIR}/appeal-service/Dockerfile"
+      --destination "${YC_CI_REGISTRY}/${YC_CI_REGISTRY_ID}/andrey4281/appeal-service:${CI_COMMIT_SHA}"
+    - /kaniko/executor
+      --context "${CI_PROJECT_DIR}"
+      --dockerfile "${CI_PROJECT_DIR}/doctor-service/Dockerfile"
+      --destination "${YC_CI_REGISTRY}/${YC_CI_REGISTRY_ID}/andrey4281/doctor-service:${CI_COMMIT_SHA}"
+    - /kaniko/executor
+      --context "${CI_PROJECT_DIR}"
+      --dockerfile "${CI_PROJECT_DIR}/nurse-service/Dockerfile"
+      --destination "${YC_CI_REGISTRY}/${YC_CI_REGISTRY_ID}/andrey4281/nurse-service:${CI_COMMIT_SHA}"
