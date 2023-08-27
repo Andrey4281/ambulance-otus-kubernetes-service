@@ -10,13 +10,17 @@ import org.springframework.web.reactive.function.server.ServerResponse
 import ru.ambulance.appeal.controller.AppealHandler
 import ru.ambulance.appeal.service.AppealService
 import ru.ambulance.config.web.WebConfig
+import ru.ambulance.function.logger
 
 @Configuration
 class AppealWebConfig: WebConfig() {
 
+    private val log = logger()
+
     @Bean
     @FlowPreview
     fun appealRouter(appealHandler: AppealHandler) : RouterFunction<ServerResponse> = docRouter {
+        log.info("Appeal route is configuring!")
         GET("/appeal", accept(MediaType.APPLICATION_JSON), appealHandler::showAppealList)
         {
             it.operationId("showAppealList")

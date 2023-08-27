@@ -11,13 +11,17 @@ import ru.ambulance.config.web.WebConfig
 import ru.ambulance.doctorservice.controller.DoctorHandler
 import ru.ambulance.doctorservice.service.DoctorShiftService
 import ru.ambulance.doctorservice.service.ExaminationService
+import ru.ambulance.function.logger
 
 @Configuration
 class DoctorWebConfig : WebConfig() {
 
+    private val log = logger()
+
     @Bean
     @FlowPreview
     fun doctorRouter(doctorHandler: DoctorHandler): RouterFunction<ServerResponse> = docRouter {
+        log.info("Doctor route is configuring!")
         POST("/doctor/beginShift/{doctorId}", accept(MediaType.APPLICATION_JSON), doctorHandler::beginShift)
         {
             it.operationId("beginShift")

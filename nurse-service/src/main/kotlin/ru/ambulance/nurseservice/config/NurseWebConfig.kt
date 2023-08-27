@@ -8,6 +8,7 @@ import org.springframework.http.MediaType
 import org.springframework.web.reactive.function.server.RouterFunction
 import org.springframework.web.reactive.function.server.ServerResponse
 import ru.ambulance.config.web.WebConfig
+import ru.ambulance.function.logger
 import ru.ambulance.nurseservice.controller.NurseHandler
 import ru.ambulance.nurseservice.service.InvestigationResultService
 import ru.ambulance.nurseservice.service.NurseShiftService
@@ -16,9 +17,12 @@ import ru.ambulance.nurseservice.service.TreatmentResultService
 @Configuration
 class NurseWebConfig : WebConfig() {
 
+    private val log = logger()
+
     @Bean
     @FlowPreview
     fun nurseRouter(nurseHandler: NurseHandler): RouterFunction<ServerResponse> = docRouter {
+        log.info("Nurse route is configuring!")
         POST("/nurse/beginShift/{nurseId}", accept(MediaType.APPLICATION_JSON), nurseHandler::beginShift)
         {
             it.operationId("beginShift")
